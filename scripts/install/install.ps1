@@ -72,8 +72,14 @@ function VerifyPythonExecutableMeetsMinimumRequirements {
         return $false
     }
 
-    # need to escape spaces in the path for Invoke-Expression
-    $EscapedExecutable = $PythonExecutable -replace ' ','` '
+    # Instead of trying to escape just spaces (like the current logic), make powershell to call/invoke (using & ) a not-escaped value as is by enclosing it in between ` `.
+    # This change makes the script more robust in that it doesn't fail even if the $PythonExecutable as other non-alphanumeric stuff like ( or ) etc..
+   # Trying to use same variables used in original script minimizing custom-stuff  
+  $EscapedExecutable = $PythonExecutable # optional if you want to use the $PythonExecutable instead taking care of this at all other places 
+  $PythonVersion = Invoke-Expression "& `"$EscapedExecutable`" -c 'import platform;print(platform.python_version())'"
+  
+    
+    $EscapedExecutable = $PythonExecutable
     $PythonVersion = Invoke-Expression "$EscapedExecutable -c 'import platform;print(platform.python_version())'"
     $MinVersionToCheck = $MinValidPython2Version
     if ($PythonVersion.StartsWith("3")) {
