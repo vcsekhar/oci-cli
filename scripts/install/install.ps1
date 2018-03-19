@@ -80,7 +80,7 @@ function VerifyPythonExecutableMeetsMinimumRequirements {
   
     
     $EscapedExecutable = $PythonExecutable
-    $PythonVersion = Invoke-Expression "$EscapedExecutable -c 'import platform;print(platform.python_version())'"
+    $PythonVersion = Invoke-Expression "& `"$EscapedExecutable`" -c 'import platform;print(platform.python_version())'"
     $MinVersionToCheck = $MinValidPython2Version
     if ($PythonVersion.StartsWith("3")) {
         $MinVersionToCheck = $MinValidPython3Version
